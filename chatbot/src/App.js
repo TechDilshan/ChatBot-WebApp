@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { auth, db, signInWithGoogle, logout } from "./firebase";
+import { auth, db, logout } from "./firebase";
 import { doc, getDoc } from "firebase/firestore";
 import ChatbotA from "./components/ChatbotA";
 import ChatbotB from "./components/ChatbotB";
