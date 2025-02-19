@@ -1,0 +1,23 @@
+div {
+  text-align: center;
+  margin-top: 50px;
+}
+h2 {
+  color: #333;
+}
+button {
+  background-color: #4285F4;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+button:hover {
+  background-color: #357ae8;
+}
+
+/* Add this to your CSS file */
+.button-margin {
+  margin: 10px; /* Adjust the margin as needed */
+}

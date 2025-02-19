@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { auth, signInWithGoogle } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import '../css.css';
 
 const Login = () => {
   const [user, setUser] = useState(null);
