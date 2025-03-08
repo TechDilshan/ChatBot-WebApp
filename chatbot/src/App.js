@@ -7,6 +7,7 @@ import ChatbotB from "./components/ChatbotB";
 import Dashboard from "./components/Dashboard";
 import Login from "./auth/Login";
 import PrivateRoute from "./PrivateRoute";
+import Home from "./Home"
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -60,6 +61,7 @@ const App = () => {
             </PrivateRoute>
           }
         />
+        <Route path="/home" element={<Home />} />
       </Routes>
       {user && <button onClick={handleLogout}>Logout</button>}
     </Router>

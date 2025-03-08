@@ -11,6 +11,15 @@ const firebaseConfig = {
     appId: "1:571234613539:web:f9eb3f85a07bde019df496"
   };
 
+  // const firebaseConfig = {
+  //   apiKey: "AIzaSyCi_ZK7pkb6eqxGdy6ElknRKpAuRcHWcRs",
+  //   authDomain: "chatbot-7b4de.firebaseapp.com",
+  //   projectId: "chatbot-7b4de",
+  //   storageBucket: "chatbot-7b4de.firebasestorage.app",
+  //   messagingSenderId: "543348663204",
+  //   appId: "1:543348663204:web:6247c14aadc21027229731"
+  // };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
