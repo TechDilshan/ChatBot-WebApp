@@ -1,56 +1,46 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBSS_cv_YILBfBbNwExmVVUEjemSkj_kaI",
-    authDomain: "chatbot-ee1e0.firebaseapp.com",
-    projectId: "chatbot-ee1e0",
-    storageBucket: "chatbot-ee1e0.firebasestorage.app",
-    messagingSenderId: "571234613539",
-    appId: "1:571234613539:web:f9eb3f85a07bde019df496"
-  };
-
-  // const firebaseConfig = {
-  //   apiKey: "AIzaSyCi_ZK7pkb6eqxGdy6ElknRKpAuRcHWcRs",
-  //   authDomain: "chatbot-7b4de.firebaseapp.com",
-  //   projectId: "chatbot-7b4de",
-  //   storageBucket: "chatbot-7b4de.firebasestorage.app",
-  //   messagingSenderId: "543348663204",
-  //   appId: "1:543348663204:web:6247c14aadc21027229731"
-  // };
+  apiKey: "AIzaSyBSS_cv_YILBfBbNwExmVVUEjemSkj_kaI",
+  authDomain: "chatbot-ee1e0.firebaseapp.com",
+  projectId: "chatbot-ee1e0",
+  storageBucket: "chatbot-ee1e0.firebasestorage.app",
+  messagingSenderId: "571234613539",
+  appId: "1:571234613539:web:f9eb3f85a07bde019df496"
+};
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const googleProvider = new GoogleAuthProvider();
+const provider = new GoogleAuthProvider();
 
-// Google Sign-in & Firestore Role Handling
+// Google Sign-In
 const signInWithGoogle = async () => {
   try {
-    const result = await signInWithPopup(auth, googleProvider.setCustomParameters({
-      prompt: 'select_account' // Force account selection
-    }));
+    const result = await signInWithPopup(auth, provider);
     const user = result.user;
+
+    // Fetch role from Firestore
     const userRef = doc(db, "users", user.email);
     const userSnap = await getDoc(userRef);
 
-    // If user does not exist in Firestore, set a default role
-    if (!userSnap.exists()) {
-      await setDoc(userRef, { role: "A" }); // Default role (change if needed)
+    if (userSnap.exists()) {
+      return userSnap.data().role;
+    } else {
+      alert("No role assigned. Contact Admin.");
+      await signOut(auth);
+      return null;
     }
-
-    return user;
   } catch (error) {
-    console.error("Google Sign-in Error:", error);
+    console.error("Error during sign-in:", error);
   }
 };
 
+// Logout function
 const logout = async () => {
-    await signOut(auth);
-    localStorage.removeItem("loggedEmail"); // Clear the logged email
-    localStorage.clear(); // Clear any other stored data
+  await signOut(auth);
+  window.location.href = "/"; // Redirect to Home after logout
 };
-  
-
 export { auth, db, signInWithGoogle, logout };

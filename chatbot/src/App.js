@@ -2,68 +2,28 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { auth, db, logout } from "./firebase";
 import { doc, getDoc } from "firebase/firestore";
+import Home from "./Home";
+import Login from "./auth/Login";
 import ChatbotA from "./components/ChatbotA";
 import ChatbotB from "./components/ChatbotB";
 import Dashboard from "./components/Dashboard";
-import Login from "./auth/Login";
-import PrivateRoute from "./PrivateRoute";
-import Home from "./Home"
 
 const App = () => {
   const [user, setUser] = useState(null);
-  const [role, setRole] = useState("");
 
   useEffect(() => {
-    const fetchUserRole = async (user) => {
-      if (!user) return;
-
-      const userRef = doc(db, "users", user.email);
-      const userSnap = await getDoc(userRef);
-
-      if (userSnap.exists()) {
-        setRole(userSnap.data().role);
-      } else {
-        setRole(""); // No role assigned
-      }
-    };
-
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setUser(user);
-      if (user) {
-        fetchUserRole(user);
-      } else {
-        setRole("");
-      }
-    });
-
-    return () => unsubscribe();
+    auth.onAuthStateChanged(setUser);
   }, []);
-
-  const handleLogout = async () => {
-    await logout();
-    await auth.signOut();
-    setUser(null);
-    setRole(""); // Clear role after logout
-  };
-  
 
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route
-          path="/"
-          element={
-            <PrivateRoute user={user}>
-              {role === "A" && <ChatbotA />}
-              {role === "B" && <ChatbotB />}
-              {role === "admin" && <Dashboard />}
-            </PrivateRoute>
-          }
-        />
-        <Route path="/home" element={<Home />} />
+        <Route path="/chatbotA" element={<ChatbotA />} />
+        <Route path="/chatbotB" element={<ChatbotB />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
-      {user && <button onClick={handleLogout}>Logout</button>}
     </Router>
   );
 };
